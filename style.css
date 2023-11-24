@@ -1,0 +1,22 @@
+/* External Styles */
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #303136;
+}
+
+canvas {
+    display: block;
+    background: url('https://imagetolink.com/ib/f0126QUExl.png');
+    background-size: cover;
+}
+
+.draggable {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    background: rgba(0, 0, 0, 0.6);
+    outline: solid 2px white;
+    border-radius: 50%;
+    cursor: pointer;
+}
