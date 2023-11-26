@@ -18,5 +18,29 @@ canvas {
     background: rgba(0, 0, 0, 0.6);
     outline: solid 2px white;
     border-radius: 50%;
-    cursor: pointer;
+    cursor: grab;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    font-family: 'Open Sans', sans-serif; 
+    color: #ffffff; 
 }
+
+#centerCircle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    outline: solid 2px black;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 2; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    font-family: 'Open Sans', sans-serif; 
+    color: #ffffff; 
+}
+
