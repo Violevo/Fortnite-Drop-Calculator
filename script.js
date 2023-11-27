@@ -9,11 +9,15 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initialize line image and flip status
     const lineImage = new Image();
     let lineFlipped = false;
+    let arrowdrew = false;
 
     // Initial circle positions
     let circle1 = { x: 800, y: 700 };
     let circle2 = { x: 300, y: 200 };
     let centerCircle = calculateMidpoint(circle1, circle2);
+    let quart1 = calculateMidpoint(circle1, centerCircle);
+    let quart2 = calculateMidpoint(circle1, circle2);
+    let quart3 = calculateMidpoint(centerCircle, circle2);
 
     mapImage.onload = function () {
         ctx.drawImage(mapImage, 0, 0, canvas.width, canvas.height);
@@ -24,6 +28,12 @@ document.addEventListener('DOMContentLoaded', function () {
     drawCircle('circle1', circle1);
     drawCircle('circle2', circle2);
     drawCircle('centerCircle', centerCircle);
+
+    //draw arrows
+    canvas_arrow(ctx, circle1.x, circle1.y, quart1.x, quart1.y, 10);
+    canvas_arrow(ctx, circle1.x, circle1.y, quart2.x, quart2.y, 10);
+    canvas_arrow(ctx, circle1.x, circle1.y, quart3.x, quart3.y, 10);
+    canvas_arrow(ctx, circle1.x, circle1.y, circle2.x, circle2.y, 10);
 
     // Make circles draggable
     makeDraggable('circle1');
@@ -81,6 +91,42 @@ document.addEventListener('DOMContentLoaded', function () {
         circle.style.top = position.y - circle.clientHeight / 2 + 'px';
     }
 
+    
+
+    function canvas_arrow(context, fromx, fromy, tox, toy, r){
+        
+        var x_center = tox;
+        var y_center = toy;
+    
+        var angle;
+        var x;
+        var y;
+    
+        context.beginPath();
+    
+        angle = Math.atan2(toy-fromy,tox-fromx)
+        x = r*Math.cos(angle) + x_center;
+        y = r*Math.sin(angle) + y_center;
+    
+        context.moveTo(x, y);
+    
+        angle += (1/3)*(2*Math.PI)
+        x = r*Math.cos(angle) + x_center;
+        y = r*Math.sin(angle) + y_center;
+    
+        context.lineTo(x, y);
+    
+        angle += (1/3)*(2*Math.PI)
+        x = r*Math.cos(angle) + x_center;
+        y = r*Math.sin(angle) + y_center;
+    
+        context.lineTo(x, y);
+    
+        context.closePath();
+    
+        context.fill();
+    }
+
     function makeDraggable(id) {
         const circle = document.getElementById(id);
 
@@ -104,6 +150,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 drawLine(circle1, circle2);
                 getDropCtx.drawImage(getDropImage, getDropImageX, getDropImageY, 360, 66);
+                canvas_arrow(ctx, circle1.x, circle1.y, quart1.x, quart1.y, 10);
+                canvas_arrow(ctx, circle1.x, circle1.y, quart2.x, quart2.y, 10);
+                canvas_arrow(ctx, circle1.x, circle1.y, quart3.x, quart3.y, 10);
+                canvas_arrow(ctx, circle1.x, circle1.y, circle2.x, circle2.y, 10);
+                
             };
 
             const onMouseUp = function () {
@@ -171,11 +222,21 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.strokeStyle = 'white'; // White line
         ctx.lineWidth = 2;
         ctx.stroke();
+
+        canvas_arrow(ctx, circle1.x, circle1.y, quart1.x, quart1.y, 10);
+        canvas_arrow(ctx, circle1.x, circle1.y, quart2.x, quart2.y, 10);
+        canvas_arrow(ctx, circle1.x, circle1.y, quart3.x, quart3.y, 10);
+        canvas_arrow(ctx, circle1.x, circle1.y, circle2.x, circle2.y, 10);
     }
 
     function clearCanvas() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(mapImage, 0, 0, canvas.width, canvas.height);
+        drawLine(circle1,circle2)
+        canvas_arrow(ctx, circle1.x, circle1.y, quart1.x, quart1.y, 10);
+        canvas_arrow(ctx, circle1.x, circle1.y, quart2.x, quart2.y, 10);
+        canvas_arrow(ctx, circle1.x, circle1.y, quart3.x, quart3.y, 10);
+        canvas_arrow(ctx, circle1.x, circle1.y, circle2.x, circle2.y, 10);
     }
 
     function flipline() {
@@ -185,7 +246,11 @@ document.addEventListener('DOMContentLoaded', function () {
         // Update the positions of the circles on the page
         drawCircle('circle1', circle1);
         drawCircle('circle2', circle2);
-        drawLine(circle1, circle2);
+        drawLine(circle1, circle2);     
+        canvas_arrow(ctx, circle1.x, circle1.y, quart1.x, quart1.y, 10);
+        canvas_arrow(ctx, circle1.x, circle1.y, quart2.x, quart2.y, 10);
+        canvas_arrow(ctx, circle1.x, circle1.y, quart3.x, quart3.y, 10);
+        canvas_arrow(ctx, circle1.x, circle1.y, circle2.x, circle2.y, 10);
 
         // Toggle the value of lineFlipped
         lineFlipped = !lineFlipped;
