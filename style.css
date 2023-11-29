@@ -11,6 +11,16 @@ canvas {
     background-size: cover;
 }
 
+#dropmarker {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    background: transparent;
+    outline: transparent;
+    
+
+}
+
 .draggable {
     position: absolute;
     width: 35px;
@@ -44,3 +54,24 @@ canvas {
     color: #ffffff; 
 }
 
+#dropbutton {
+
+    font-family: 'Bebas Neue', sans-serif;
+    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
+    background-size: cover;
+    background-color: #3399ff;
+    width: 600px;
+    height: 50px;
+    border: none;
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+    border-radius: 10px; 
+}
+
+#dropbutton:hover {
+    background-color: #303136;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
