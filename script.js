@@ -5,104 +5,126 @@ document.addEventListener('DOMContentLoaded', function () {
     const mapImage = new Image();
     mapImage.src = 'https://imagetolink.com/ib/f0126QUExl.png';
 
-
-    // set the element positions
     let C = { x: 654.1326293496485, y: 379.4085654616584 };
-
-    let circle2 = { x: 486, y: 859 };
-    let circle1 = { x: 730, y: 163 };
-
-    let dropmarker1 = { x: 285, y: 250 };
-    let dropradius = { x: 285, y: 250 };
-
-    let rX = 100;
-    let rY = 100;
-    let radius = 50;
-
-    let circleColor = "blue";
-    let lineWidth = 2;  
+    let circle1 = { x: 486, y: 859 };
+    let circle2 = { x: 730, y: 163 };
+    let dropmarker = { x: 285, y: 250 };
 
     let centerCircle = calculateMidpoint(circle1, circle2);
+    let lineFlipped = false;
+
+    let dropmarkerOffsetX = 0;
+    let dropmarkerOffsetY = -19 ;
 
     const lineColor = 'black';
     const outlineColor = 'white';
     const outlineWidth = 1;
-    let lineFlipped = false;
-
-    // set up the canvas
-    flipline();
-    initializeMap();
     
 
-    
-    // 110 PX radius to deploy glider
+    // m to px ratio
+    // 100:110
+
 
     function initializeMap() {
         mapImage.onload = function () {
-            //onload draw map and lines
             ctx.drawImage(mapImage, 0, 0, canvas.width, canvas.height);
             drawLine(circle1, circle2);
-            drawLine2(C, dropmarker1, lineColor, outlineColor, outlineWidth);
         };
 
-        //draws the elements
         drawCircle('circle1', circle1);
         drawCircle('circle2', circle2);
-        drawCircle('dropmarker', dropmarker1);
+        drawCircle('dropmarker', dropmarker);
         drawCircle('centerCircle', centerCircle);
     }
 
     function getDrop() {
-        //gets the best drop on event
+        drawradius(ctx, dropmarker.x, dropmarker.y, 110, "white", 2);
+    
+        // Store the previous dropmarker position
+        const dropmarke = { x: dropmarker.x, y: dropmarker.y }
+    
+        // Update the DOM representation of the dropmarker position
+        const dropmarkerCircle = document.getElementById('dropmarker');
+        dropmarkerCircle.style.left = dropmarker.x - dropmarkerCircle.clientWidth / 2 + dropmarkerOffsetX + 'px';
+        dropmarkerCircle.style.top = dropmarker.y - dropmarkerCircle.clientHeight / 2 + dropmarkerOffsetY + 'px';
+    
+        // Find the closest point on the line
+        C = findClosestPointOnLine(circle1, circle2, dropmarker);
+    
+        // Calculate the distance between C and circle1
+        const distToCircle1 = distance(C.x, C.y, circle1.x, circle1.y);
+    
+        // Calculate the unit vector from C to circle1
+        const unitVector = {
+            x: (circle1.x - C.x) / distToCircle1,
+            y: (circle1.y - C.y) / distToCircle1
+        };
+    
+        // Move C closer to circle1
+        C.x += 80 * unitVector.x;
+        C.y += 80 * unitVector.y;
+    
+        drawLine2(C, dropmarker, "White", "White", outlineWidth);
+        drawLine2(C, dropmarker, "Black", "Black", outlineWidth, 10);
+    }
+    
 
-        //draw line
-        C = findClosestPointOnLine(circle1, circle2, dropmarker1);
-        drawLine2(C, dropmarker1, lineColor, outlineColor, outlineWidth);
-
-        // Draw the radius around the dropmarker
-        ctx.beginPath();
-        ctx.arc(dropmarker1.x, dropmarker1.y, 110, 0, 2 * Math.PI);
-        ctx.strokeStyle = outlineColor;
-        ctx.lineWidth = outlineWidth;
-        ctx.stroke();
-        
+    function drawradius(context, centerX, centerY, radius, color, lineWidth) {
+        //Function to
+        context.beginPath();
+        context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        context.strokeStyle = color;
+        context.lineWidth = lineWidth;
+        context.stroke();
+        context.closePath();
     }
 
-    function initializeDraggable(id) {
+    initializeMap();
 
-        //save the element id in cirlce
+    canvas.addEventListener('click', function (event) {
+        const clickX = event.clientX - canvas.getBoundingClientRect().left;
+        const clickY = event.clientY - canvas.getBoundingClientRect().top;
+
+        if (
+            clickX >= getDropImageX &&
+            clickX <= getDropImageX + getDropImage.width &&
+            clickY >= getDropImageY &&
+            clickY <= getDropImageY + getDropImage.height
+        ) {
+            getDrop();
+        }
+    });
+
+    function initializeDraggable(id) {
         const circle = document.getElementById(id);
 
         circle.addEventListener('mousedown', function (event) {
-            //on click
-           
             event.preventDefault();
-
             const onMouseMove = function (e) {
-
-                //set the position to the mouse cursor
                 const x = e.clientX;
                 const y = e.clientY;
 
                 circle.style.left = x - circle.clientWidth / 2 + 'px';
                 circle.style.top = y - circle.clientHeight / 2 + 'px';
 
+                
+            
                 updateCirclePositions(id, x, y);
 
-                //draw elements
                 centerCircle = calculateMidpoint(circle1, circle2);
                 drawLine(circle1, circle2);
-                getDrop()
+
+                
+                
+        
 
             };
 
             const onMouseUp = function () {
-                //remove the event listeners to stop cicle from dragging around without click
                 document.removeEventListener('mousemove', onMouseMove);
                 document.removeEventListener('mouseup', onMouseUp);
             };
 
-            //add event listeners to make the circles constantly update position
             document.addEventListener('mousemove', onMouseMove);
             document.addEventListener('mouseup', onMouseUp);
         });
@@ -111,35 +133,56 @@ document.addEventListener('DOMContentLoaded', function () {
     
 
     function updateCirclePositions(id, x, y) {
-
         if (id === 'circle1') {
             circle1 = { x, y };
-            //update circle1
         } else if (id === 'circle2') {
             circle2 = { x, y };
-            //update circle2
         } else if (id === 'centerCircle') {
             centerCircle = { x, y };
-            //centerCircle
         }
     }
 
-    //makedraggable
+    function makeDraggableWithOffset(element, callback, offsetX, offsetY) {
+        element.addEventListener('mousedown', function (event) {
+            event.preventDefault();
+
+            const onMouseMove = function (e) {
+                const x = e.clientX;
+                const y = e.clientY;
+    
+                element.style.left = x - element.clientWidth / 2 + offsetX + 'px';
+                element.style.top = y - element.clientHeight / 2 + offsetY + 'px';
+    
+                const newPosition = { x: x - offsetX, y: y - offsetY };
+                callback(newPosition);
+            };
+
+            const onMouseUp = function () {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            };
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
+    }
+
+    function updateDropmarkerPosition(position) {
+        dropmarker = { x: position.x - dropmarkerOffsetX, y: position.y - dropmarkerOffsetY };
+        drawLine(circle1, circle2);
+    }
+
+    const dropmarkerElement = document.getElementById('dropmarker');
+    makeDraggableWithOffset(dropmarkerElement, updateDropmarkerPosition, dropmarkerOffsetX, dropmarkerOffsetY);
 
     initializeDraggable('circle1');
     initializeDraggable('circle2');
-    initializeDraggable('dropmarker');
     initializeDraggable('centerCircle');
-    initializeDraggable('dropradius');
+    initializeDraggable('dropmarker');
 
-    //drawline
-
-    findClosestPointOnLine(circle1, circle2, dropmarker1);
-    drawLine2(C, dropmarker1, lineColor, outlineColor, outlineWidth);
+    findClosestPointOnLine(circle1, circle2, dropmarker);
+    
     drawLine(circle1, circle2);
-
-    //define elements
-
     const getDropCanvas = document.getElementById('fortniteMapCanvas');
     const getDropCtx = getDropCanvas.getContext('2d');
 
@@ -150,12 +193,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const getDropImageY = 1;
 
     getDropCanvas.addEventListener('click', function (event) {
-        //function to run getdrop on click
-
         const clickX = event.clientX - getDropCanvas.getBoundingClientRect().left;
         const clickY = event.clientY - getDropCanvas.getBoundingClientRect().top;
 
-        //if clicked in canvas:
         if (
             clickX >= getDropImageX &&
             clickX <= getDropImageX + getDropImage.width &&
@@ -167,8 +207,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function findClosestPointOnLine(A, B, P) {
-        // Stolen ScalarProjection from https://www.geeksforgeeks.org/scalar-and-vector-projection-formula/
-        
         const AB = { x: B.x - A.x, y: B.y - A.y };
         const AP = { x: P.x - A.x, y: P.y - A.y };
         const scalarProjection = (AP.x * AB.x + AP.y * AB.y) / (Math.pow(AB.x, 2) + Math.pow(AB.y, 2));
@@ -183,55 +221,45 @@ document.addEventListener('DOMContentLoaded', function () {
     function distance(x1, y1, x2, y2) {
         const dx = x2 - x1;
         const dy = y2 - y1;
-
-        //pythagarous theorm c^2 = a^2 + b^2
         return Math.sqrt(dx * dx + dy * dy);
     }
 
     function canvas_arrow(context, fromx, fromy, tox, toy, r, color, outlineColor, outlineWidth) {
-        //stolen from https://stackoverflow.com/questions/808826/draw-arrow-on-canvas-tag
-
         var x_center = tox;
         var y_center = toy;
         var angle = Math.atan2(toy - fromy, tox - fromx);
         var x = r * Math.cos(angle) + x_center;
         var y = r * Math.sin(angle) + y_center;
-
         context.beginPath();
-
         context.moveTo(x, y);
         angle += (1 / 3) * (2 * Math.PI);
         x = r * Math.cos(angle) + x_center;
         y = r * Math.sin(angle) + y_center;
-
         context.lineTo(x, y);
         angle += (1 / 3) * (2 * Math.PI);
         x = r * Math.cos(angle) + x_center;
         y = r * Math.sin(angle) + y_center;
-
         context.lineTo(x, y);
         context.closePath();
-
         context.fillStyle = "black";
         context.fill();
-
         context.strokeStyle = outlineColor;
         context.lineWidth = outlineWidth;
         context.stroke();
     }
 
     function flipline() {
-        // flip the circle positions
+
         [circle1, circle2] = [circle2, circle1];
-       
-        //redraw the circles in the correct positions
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(mapImage, 0, 0, canvas.width, canvas.height);
+
         drawCircle('circle1', circle1);
         drawCircle('circle2', circle2);
-
-        //redraw the line in the oppsite direction
         drawLine(circle1, circle2, lineColor, outlineColor, outlineWidth);
+        
 
-        //toggle flipline
         lineFlipped = !lineFlipped;
     }
 
@@ -239,9 +267,10 @@ document.addEventListener('DOMContentLoaded', function () {
     flipLineButton.addEventListener('click', flipline);
 
     function drawLine(start, end, lineColor, outlineColor, outlineWidth) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(mapImage, 0, 0, canvas.width, canvas.height);
 
-        //Clear the canvas so that line can be drawn
-        clearCanvas()
+        getDrop()
 
         // Calculate the midpoint of the line
         const midPoint = calculateMidpoint(start, end);
@@ -249,8 +278,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // Update the position of the center circle
         centerCircle = midPoint;
         drawCircle('centerCircle', centerCircle);
-
-        
 
         // Find the direction and length of the line
         const dx = end.x - start.x;
@@ -303,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.stroke();
 
         // Calculate and draw multiple arrowheads along the line
-        const numArrowheads = 10000;
+        const numArrowheads = 5000;
         for (let i = 1; i <= numArrowheads; i++) {
             const ratio = i / (numArrowheads + 1);
             const arrow = calculateArrowheadPosition(extendedStart.x, extendedStart.y, extendedEnd.x, extendedEnd.y, 10, ratio);
@@ -312,38 +339,28 @@ document.addEventListener('DOMContentLoaded', function () {
         
     }
 
-    function drawLine2(start, end, lineColor, outlineColor, outlineWidth) {
+    function drawLine2(start, end, lineColor, outlineColor, outlineWidth, length) {
         const dx = end.x - start.x;
         const dy = end.y - start.y;
-        const length = Math.sqrt(dx * dx + dy * dy);
-
-        // Update the dropradius
-        drawCircle('dropradius', dropradius);
+    
+        // If length is not provided, calculate it
+        if (!length) {
+            length = Math.sqrt(dx * dx + dy * dy);
+        }
     
         // Draw the line
         ctx.beginPath();
         if (!lineFlipped) {
             ctx.moveTo(start.x, start.y);
-            ctx.lineTo(end.x, end.y);
+            ctx.lineTo(start.x + (dx / length) * length, start.y + (dy / length) * length);
         } else {
             ctx.moveTo(end.x, end.y);
-            ctx.lineTo(start.x, start.y);
+            ctx.lineTo(end.x - (dx / length) * length, end.y - (dy / length) * length);
         }
+
         ctx.strokeStyle = lineColor;
         ctx.lineWidth = 2;
         ctx.stroke();
-
-
-        
-        
-    
-        // Draw arrowheads
-        const numArrowheads = 25;
-        for (let i = 1; i <= numArrowheads; i++) {
-            const ratio = i / (numArrowheads + 1);
-            const arrow = calculateArrowheadPosition(start.x, start.y, end.x, end.y, 10, ratio);
-            canvas_arrow(ctx, arrow.fromx, arrow.fromy, arrow.tox, arrow.toy, 5);
-        }
     }
     
 
@@ -365,9 +382,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function clearCanvas() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(mapImage, 0, 0, canvas.width, canvas.height);
-
-        C = findClosestPointOnLine(circle1, circle2, dropmarker1);
-        drawLine2(C, dropmarker1, lineColor, outlineColor, outlineWidth);
+        drawLine(circle1, circle2);
     }
 
     function calculateMidpoint(point1, point2) {
