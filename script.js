@@ -1,9 +1,10 @@
+
 document.addEventListener('DOMContentLoaded', function () {
     const canvas = document.getElementById('fortniteMapCanvas');
     const ctx = canvas.getContext('2d');
 
     const mapImage = new Image();
-    mapImage.src = 'https://imagetolink.com/ib/f0126QUExl.png';
+    mapImage.src = 'https://i.imgur.com/PZYLIxU.jpeg';
 
     let C = { x: 654.1326293496485, y: 379.4085654616584 };
     let circle1 = { x: 486, y: 859 };
@@ -22,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
 
     // m to px ratio
-    // 100:110
+    // 30:11
 
 
     function initializeMap() {
