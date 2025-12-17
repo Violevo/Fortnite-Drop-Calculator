@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Free & Open Source Fortnite Drop Location Calculator - Calculate optimal jump & glider deploy points using a simple time-to-land optimization model. Map data provided by Fortnite-API.com">
+    <title>Fortnite Drop Calculator</title>
+    <link rel="icon" href="assets/icon.ico">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+    <!-- Styles & Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Map -->
+        <div id="map-container">
+            <div id="map"></div>
+
+            <!-- Info Button -->
+            <button id="infoBtn" class="info-btn fixed-control" title="About">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round" class="btn-icon">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+            </button>
+
+            <!-- Legend -->
+            <div class="legend">
+                <h4>Legend</h4>
+                <div class="legend-item">
+                    <span class="marker-icon bus-start"></span>
+                    <span>Bus Start</span>
+                </div>
+                <div class="legend-item">
+                    <span class="marker-icon bus-end"></span>
+                    <span>Bus End</span>
+                </div>
+                <div class="legend-item">
+                    <span class="marker-icon target"></span>
+                    <span>Target</span>
+                </div>
+                <div class="legend-item">
+                    <span class="marker-icon deploy"></span>
+                    <span>Deploy Point</span>
+                </div>
+                <div class="legend-item">
+                    <span class="marker-icon jump"></span>
+                    <span>Jump Point</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info -->
+    <div id="helpModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Info</h2>
+                <div class="header-actions">
+                    <button id="toggleLabelsBtn" class="header-toggle" title="Toggle Location Names">
+                        Toggle Map Names
+                    </button>
+                    <a href="https://violevo.github.io" class="header-link" title="Back to Home">
+                        <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                    </a>
+                    <a href="https://github.com/Violevo/Fortnite-Drop-Calculator" class="header-link"
+                        title="GitHub Repository" target="_blank" rel="noopener noreferrer">
+                        <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                            </path>
+                        </svg>
+                    </a>
+                    <button id="closeModal" class="close-btn">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <h3>Usage</h3>
+                <ol>
+                    <li><strong>Set the Bus Route:</strong> Drag the 🟢 <span style="color:var(--bus-start-color)">S
+                            (Start)</span> and 🔵 <span style="color:var(--bus-end-color)">E (End)</span> markers to
+                        match the Battle Bus path.</li>
+                    <li><strong>Set Target:</strong> Click anywhere on the map or drag the 🟠 <span
+                            style="color:var(--target-color)">T (Target)</span> marker to your desired landing spot.
+                    </li>
+                    <li><strong>Jump & Deploy:</strong> The calculator will show:
+                        <ul>
+                            <li>🔴 <strong>J (Jump):</strong> Where to leave the bus.</li>
+                            <li>🟢 <strong>G (Deploy):</strong> Where your glider will auto-deploy.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Fly:</strong> Follow the path J -> G -> T for the fastest drop!</li>
+                </ol>
+
+                <div class="technical-info">
+                    <h3>About</h3>
+                    <p>
+                        Designed using <strong>Leaflet.js</strong> and a custom
+                        <strong>physics-based drop model</strong>. The calculator simulates Battle Bus
+                        speed, freefall horizontal drift, and auto-deploy glide velocities to find
+                        the mathematically optimal jump time.
+                    </p>
+                    <p>
+                        Map assets provided via <strong>Fortnite-API.com</strong>.
+                        Not affiliated with or endorsed by Epic Games.
+                        © 2025 Violevo &mdash;
+                        <a href="https://github.com/violevo/">github.com/violevo</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- App JS -->
+    <script src="app.js"></script>
+</body>
+
+</html>

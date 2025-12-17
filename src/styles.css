@@ -1,0 +1,455 @@
+/* CSS Variables */
+:root {
+  --primary-color: #7b5ff5;
+  --primary-hover: #6248d4;
+  --secondary-color: #3a3d4a;
+  --secondary-hover: #4a4e5f;
+  --bg-dark: #03203f;
+  --bg-panel: #22242e;
+  --bg-section: #2a2d3a;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a3b1;
+  --text-muted: #6b6e7d;
+  --border-color: #3a3d4a;
+  --success-color: #4ade80;
+  --warning-color: #fbbf24;
+  --error-color: #f87171;
+  --bus-start-color: #22c55e;
+  --bus-end-color: #3b82f6;
+  --target-color: #f59e0b;
+  --deploy-color: #4ade80;
+  --jump-color: #ef4444;
+}
+
+/* Reset & Base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  line-height: 1.5;
+  overflow: hidden;
+}
+
+/* App Layout */
+.app-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Map Container */
+#map-container {
+  flex: 1;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: var(--bg-dark);
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-dark);
+}
+
+/* Floating Elements Base */
+.legend {
+  position: absolute;
+  background: rgba(26, 27, 35, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  z-index: 1000;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.info-btn {
+  pointer-events: auto;
+  width: 32px;
+  height: 32px;
+  background: rgba(26, 27, 35, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-style: italic;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.info-btn.fixed-control {
+  position: absolute;
+  top: 82px;
+  left: 10px;
+  z-index: 1000;
+}
+
+.btn-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.info-btn:hover {
+  background: var(--bg-section);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+/* Legend */
+.legend {
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 16px;
+}
+
+.legend h4 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.legend-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Markers */
+.marker-icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.marker-icon.bus-start {
+  background: var(--bus-start-color);
+}
+
+.marker-icon.bus-end {
+  background: var(--bus-end-color);
+}
+
+.marker-icon.target {
+  background: var(--target-color);
+}
+
+.marker-icon.deploy {
+  background: var(--deploy-color);
+}
+
+.marker-icon.jump {
+  background: var(--jump-color);
+}
+
+/* Leaflet Div Icon Reset */
+.leaflet-div-icon {
+  background: transparent;
+  border: none;
+}
+
+.custom-marker {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.custom-marker.bus-start {
+  background: var(--bus-start-color);
+}
+
+.custom-marker.bus-end {
+  background: var(--bus-end-color);
+}
+
+.custom-marker.target {
+  background: var(--target-color);
+}
+
+.custom-marker.deploy {
+  background: var(--deploy-color);
+  width: 20px;
+  height: 20px;
+}
+
+.custom-marker.jump {
+  background: var(--jump-color);
+  width: 28px;
+  height: 28px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Leaflet Zoom Control Theming */
+.leaflet-control-zoom a {
+  background: rgba(26, 27, 35, 0.95) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+}
+
+.leaflet-control-zoom a:hover {
+  background: var(--bg-section) !important;
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+.leaflet-control-zoom-in {
+  border-bottom: none !important;
+  border-top-left-radius: 8px !important;
+  border-top-right-radius: 8px !important;
+}
+
+.leaflet-control-zoom-out {
+  border-bottom-left-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+}
+
+.leaflet-bar {
+  border: none !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  width: 90%;
+  max-width: 500px;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+  overflow: hidden;
+}
+
+.modal-overlay.active .modal-content {
+  transform: translateY(0);
+}
+
+.modal-header {
+  padding: 20px;
+  background: var(--bg-section);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h2 {
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  color: #fff;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-toggle {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.header-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.header-toggle.active {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #fff;
+}
+
+.header-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.header-link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.header-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 28px;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+  margin-left: 8px;
+}
+
+.close-btn:hover {
+  color: #fff;
+}
+
+.modal-body {
+  padding: 24px 24px 12px 24px;
+}
+
+.modal-body h3 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.modal-body p,
+.modal-body li {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.modal-body strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.modal-body ol {
+  padding-left: 20px;
+  margin-bottom: 24px;
+}
+
+.modal-body li {
+  margin-bottom: 12px;
+}
+
+.modal-body ul {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 8px;
+}
+
+.modal-body ul li {
+  margin-bottom: 6px;
+}
+
+.technical-info {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.technical-info p {
+  margin-bottom: 12px;
+}
+
+.technical-info p:last-child {
+  margin-bottom: 0;
+}
+
+.technical-info p a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.technical-info p a:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+  .legend {
+    display: none;
+  }
+}
