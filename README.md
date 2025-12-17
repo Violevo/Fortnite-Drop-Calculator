@@ -3,18 +3,15 @@
 A lightweight, physics-optimisation-based web tool for optimising a Fortnite drop path.  
 Calculates the mathematically optimal jump and glider deploy points to minimise total landing time. Built using vanilla JavaScript, HTML, and CSS.
 
-Built using vanilla JavaScript, HTML, and CSS.
-
----
+### Usage
+Either run locally (open ```index.html``` in your browser), or refer to the [releases](https://github.com/Violevo/violevo.github.io/releases) page for a hosted site.
 
 ## Features
 
 - **Optimal Pathing**: Computes the fastest route (Jump → Deploy → Target) using an optimised drop model.
 - **Interactive Map**: Drag-and-drop markers for Bus Start, Bus End, and Target.
 - **Real-Time Updates**: Paths update instantly as markers are moved.
-- **POI Toggle**: Switch between a blank map and one with named locations.
-
----
+- **Auto-Updates**: Map automatically updates with new game versions
 
 ## Project Structure
 
