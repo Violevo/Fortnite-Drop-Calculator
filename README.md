@@ -5,16 +5,12 @@ Calculates the mathematically optimal jump and glider deploy points to minimise 
 
 Built using vanilla JavaScript, HTML, and CSS.
 
----
-
 ## Features
 
 - **Optimal Pathing**: Computes the fastest route (Jump → Deploy → Target) using an optimised drop model.
 - **Interactive Map**: Drag-and-drop markers for Bus Start, Bus End, and Target.
 - **Real-Time Updates**: Paths update instantly as markers are moved.
 - **POI Toggle**: Switch between a blank map and one with named locations.
-
----
 
 ## Project Structure
 
