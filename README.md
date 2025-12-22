@@ -28,6 +28,8 @@ Either run locally (open ```index.html``` in your browser), or refer to the [rel
 - **Map data**: Fortnite API - [fortnite-api.com](https://fortnite-api.com/)
 - **Map UI**: Leaflet - [leafletjs.com](https://leafletjs.com/)
 
+You can read more about the project [here](https://violevo.github.io/projects/assets/fortnite-drop-calculator.pdf)
+
 ## Images
 
 ![Info Preview](./images/info_preview.png)
