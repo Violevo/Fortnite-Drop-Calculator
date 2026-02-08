@@ -4,7 +4,7 @@ A lightweight, physics-optimisation-based web tool for optimising a Fortnite dro
 Calculates the mathematically optimal jump and glider deploy points to minimise total landing time. Built using vanilla JavaScript, HTML, and CSS.
 
 ### Usage
-Either run locally (open ```index.html``` in your browser), or refer to the [releases](https://github.com/Violevo/violevo.github.io/releases) page for a hosted site.
+Either run locally (open ```index.html``` in your browser), or refer to the [releases]([https://github.com/Violevo/violevo.github.io/releases](https://github.com/Violevo/Fortnite-Drop-Calculator/releases/tag/main-releases)) page for a hosted site.
 
 ## Features
 
