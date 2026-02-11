@@ -56,4 +56,4 @@ This project is licensed under the GNU GPL v3 License - see the [LICENSE](LICENS
 ![Info Preview](./images/info_preview.png)
 ![Map Preview](./images/map_preview.png)
 
-You can read more about the project [here](https://violevo.github.io/projects/assets/fortnite-drop-calculator.pdf)
+Not in any way affiliated with or endorsed by epic games - if you want to read more about the project, you can do so [here](https://violevo.github.io/projects/assets/fortnite-drop-calculator.pdf)
